@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Vulcanizeで減らすHTML ImportsのHTTPリクエスト - 1000ch.net</title>
+
+<link rel="icon" href="/favicon.png">
+<link rel="shortcut icon" href="/favicon.png">
+<link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml" sizes="any">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/github.min.css">
+<link rel="stylesheet" href="/css/app.min.css">
+<link rel="alternate" href="/rss.xml" title="1000ch.net" type="application/rss+xml">
+
+<meta name="author" content="Shogo Sensui">
+<meta name="copyright" content="Copyright (c) Shogo Sensui; Licensed under Creative Commons Attribution-Noncommercial-Share Japan">
+
+
+  
+    <meta property="og:description" content="Vulcanizeで減らすHTML ImportsのHTTPリクエスト Web Componentsの旨味はコンポーネントの再利用が出来る所にあるので、そのためにはそのリソースは断片化は避けられない。 &lt;x-element&gt;を構成するリソースはx-element.htmlに集約し、使うときにはHTML Importsでロードする。 実際には複数のWeb Componentsを利用したいケースは当たり前にあることなので、素直にやろうとすると以下のように。
+&lt;link rel=&quot;import&quot; href=&quot;x-element.html&quot;&gt; &lt;link rel=&quot;import&quot; href=&quot;y-element.html&quot;&gt; &lt;link rel=&quot;import&quot; href=&quot;z-element.html&quot;&gt;  このHTMLではこのWeb Componentsをロードしている というのが明確ではあるけど、インポートには当然HTTPリクエストを伴うので、パフォーマンスの観点からはあまりよろしくない。 今回はPolymerチームが提供しているVulcanizeを使ってこの辺りを最適化してみる。
+ Concatenating Web Components with Vulcanize Polymer/vulcanize  インストールと使い方 npmからインストール出来るので早速インストール。
+# vulcanizeのインストール $ npm install -g vulcanize  vulcanizeコマンドを使って、インポートを行っているHTMLを指定する。 指定したHTMLファイル中でインポートしているHTMLを、インポート先に書き出して&lt;link rel=&#39;import&#39;&gt;を除くような処理をする。
+# index.html内の&lt;link rel=&#39;import&#39;&gt;をアレコレしてbuild.htmlとして出力 $ vulcanize -o build.html index.html  実際にビルドされたリソースはインポートするHTMLを&lt;div hidden&gt;&lt;/div&gt;で挟んである以外は、結合だけされているような感じ。 HTML Importsの仕組みを考えれば、指定しているHTMLファイルを引っ張ってきてパースしているだけなので、直列に繋げた所で実行時に問題が起きないのも納得できる。 以下は、とある&lt;y-elements&gt;に依存している&lt;x-element&gt;のイメージ。
+&lt;link rel=&quot;import&quot; href=&quot;y-element.html&quot;&gt; &lt;template id=&quot;x-element-template&quot;&gt; &lt;x-element&gt; &lt;content&gt;&lt;/content&gt; &lt;/x-element&gt; &lt;/template&gt; &lt;script&gt; //... &lt;/script&gt;  これをVulcanizeしてみると">
+  
+
+  
+    <meta property="og:image" content="https://1000ch.net/favicon.svg">
+    <meta name="twitter:card" content="summary">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://1000ch.net/posts/2014/reduce-http-requests-with-polymer-vulcanize.html">
+<meta property="og:site_name" content="1000ch.net">
+<meta property="og:title" content="Vulcanizeで減らすHTML ImportsのHTTPリクエスト">
+
+<meta name="twitter:site" content="@1000ch">
+<meta name="twitter:url" content="https://1000ch.net/posts/2014/reduce-http-requests-with-polymer-vulcanize.html">
+<meta name="twitter:title" content="Vulcanizeで減らすHTML ImportsのHTTPリクエスト">
+
+<meta name="google-site-verification" content="BWewniqiBzRmrhpj51eLwug-F4hamFfyznl-ARb-Y4Y">
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/apple-touch-icon.png">
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/img/apple-touch-icon.png">
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/img/apple-touch-icon.png">
+<link rel="apple-touch-icon-precomposed" href="/img/apple-touch-icon.png">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-49530352-1', '1000ch.net');
+  ga('send', 'pageview');
+</script>
+
+  </head>
+  <body>
+    <div class="Container">
+      <header class="Header">
+  <h1 class="Header__Title"><a href="/">1000ch.net</a></h1>
+  <nav class="Header__Menu">
+    <div class="Header__MenuItem">
+      <i class="fa fa-rss"></i>
+      <a href="/rss.xml">RSS</a>
+    </div>
+    <div class="Header__MenuItem">
+      <i class="fa fa-heart"></i>
+      <a href="/activity.html">Activity</a>
+    </div>
+    <div class="Header__MenuItem">
+      <i class="fa fa-facebook-square"></i>
+      <a href="https://www.facebook.com/1000ch.net">Facebook</a>
+    </div>
+  </nav>
+</header>
+
+      <div class="Main">
+        <span class="Label Label--gray pull-left">2014.09.05</span>
+
+        
+
+<h1 id="vulcanizeで減らすhtml-importsのhttpリクエスト">Vulcanizeで減らすHTML ImportsのHTTPリクエスト</h1>
+
+<p>Web Componentsの旨味はコンポーネントの再利用が出来る所にあるので、そのためにはそのリソースは断片化は避けられない。
+<code>&lt;x-element&gt;</code>を構成するリソースは<code>x-element.html</code>に集約し、使うときにはHTML Importsでロードする。
+実際には複数のWeb Componentsを利用したいケースは当たり前にあることなので、素直にやろうとすると以下のように。</p>
+
+<pre><code class="language-html">&lt;link rel=&quot;import&quot; href=&quot;x-element.html&quot;&gt;
+&lt;link rel=&quot;import&quot; href=&quot;y-element.html&quot;&gt;
+&lt;link rel=&quot;import&quot; href=&quot;z-element.html&quot;&gt;
+</code></pre>
+
+<p><strong>このHTMLではこのWeb Componentsをロードしている</strong> というのが明確ではあるけど、インポートには当然HTTPリクエストを伴うので、パフォーマンスの観点からはあまりよろしくない。
+今回はPolymerチームが提供しているVulcanizeを使ってこの辺りを最適化してみる。</p>
+
+<ul>
+<li><a href="http://www.polymer-project.org/articles/concatenating-web-components.html">Concatenating Web Components with Vulcanize</a></li>
+<li><a href="https://github.com/Polymer/vulcanize">Polymer/vulcanize</a></li>
+</ul>
+
+<h2 id="インストールと使い方">インストールと使い方</h2>
+
+<p>npmからインストール出来るので早速インストール。</p>
+
+<pre><code class="language-bash"># vulcanizeのインストール
+$ npm install -g vulcanize
+</code></pre>
+
+<p><code>vulcanize</code>コマンドを使って、インポートを行っているHTMLを指定する。
+指定したHTMLファイル中でインポートしているHTMLを、インポート先に書き出して<code>&lt;link rel='import'&gt;</code>を除くような処理をする。</p>
+
+<pre><code class="language-bash"># index.html内の&lt;link rel='import'&gt;をアレコレしてbuild.htmlとして出力
+$ vulcanize -o build.html index.html
+</code></pre>
+
+<p>実際にビルドされたリソースはインポートするHTMLを<code>&lt;div hidden&gt;&lt;/div&gt;</code>で挟んである以外は、結合だけされているような感じ。
+HTML Importsの仕組みを考えれば、指定しているHTMLファイルを引っ張ってきてパースしているだけなので、直列に繋げた所で実行時に問題が起きないのも納得できる。
+以下は、とある<code>&lt;y-elements&gt;</code>に依存している<code>&lt;x-element&gt;</code>のイメージ。</p>
+
+<pre><code class="language-html">&lt;link rel=&quot;import&quot; href=&quot;y-element.html&quot;&gt;
+&lt;template id=&quot;x-element-template&quot;&gt;
+  &lt;x-element&gt;
+    &lt;content&gt;&lt;/content&gt;
+  &lt;/x-element&gt;
+&lt;/template&gt;
+&lt;script&gt;
+  //...
+&lt;/script&gt;
+</code></pre>
+
+<p>これをVulcanizeしてみると</p>
+
+<pre><code class="language-html">&lt;div hidden&gt;
+  &lt;template id=&quot;y-element-template&quot;&gt;
+    &lt;div&gt;
+      &lt;content&gt;&lt;/content&gt;
+    &lt;/div&gt;
+  &lt;/template&gt;
+  &lt;script&gt;
+    //...
+  &lt;/script&gt;
+&lt;/div&gt;
+&lt;template id=&quot;x-element-template&quot;&gt;
+  &lt;x-element&gt;
+    &lt;content&gt;&lt;/content&gt;
+  &lt;/x-element&gt;
+&lt;/template&gt;
+&lt;script&gt;
+  //...
+&lt;/script&gt;
+</code></pre>
+
+<p>のように展開される。</p>
+
+<p>Polymerのコアモジュールのように複数のWeb Componentsから依存されるような場合も、Polymerコアが何度も展開されることはなく、よしなにやってくれる。</p>
+
+<h2 id="ビルドフローに組み込んでみる">ビルドフローに組み込んでみる</h2>
+
+<ul>
+<li>ロードしているコンポーネント群を全て結合したい</li>
+<li>あくまで<code>&lt;link rel='import'&gt;</code>を頼りにビルドするので、Vulcanizeの対象は単一のHTML</li>
+</ul>
+
+<p>という前提があるので、Web Componentsをロードしてる<code>&lt;link&gt;</code>だけを抜き出して別ファイルに用意。</p>
+
+<pre><code class="language-html">&lt;link rel=&quot;import&quot; href=&quot;x-element.html&quot;&gt;
+&lt;link rel=&quot;import&quot; href=&quot;y-element.html&quot;&gt;
+&lt;link rel=&quot;import&quot; href=&quot;z-element.html&quot;&gt;
+&lt;link rel=&quot;import&quot; href=&quot;twitter-button/twitter-button.html&quot;&gt;
+&lt;link rel=&quot;import&quot; href=&quot;facebook-butotn/facebook-button.html&quot;&gt;
+</code></pre>
+
+<p>デバッグ時にはこのHTMLをインポートし、デプロイ時にはこのHTMLをVulcanizeでビルドしたものをロードすれば良い。
+インポートをしているHTML（実際にカスタム要素を使っているHTML）そのもののビルドも出来るわけで、HTTPリクエストだけを考えればそれが一番良いかもしれない。
+でも、テンプレートエンジンを使ってたり、他のページに展開されたりすることを考えてみると、Web Componentsだけをまとめておくのがバランス良さそう。発想は外部CSSファイルの扱いと同じ。</p>
+
+<p>ビルドして展開されたHTMLも圧縮したらいいんじゃねと思って今回はそれもやった。</p>
+
+<ul>
+<li><a href="https://github.com/Polymer/grunt-vulcanize">https://github.com/Polymer/grunt-vulcanize</a></li>
+<li><a href="https://github.com/gruntjs/grunt-contrib-htmlmin">https://github.com/gruntjs/grunt-contrib-htmlmin</a>
+
+<ul>
+<li><a href="https://github.com/kangax/html-minifier">https://github.com/kangax/html-minifier</a>
+<br /></li>
+</ul></li>
+</ul>
+
+<h2 id="最適化前後の例">最適化前後の例</h2>
+
+<p>小さすぎて見えにくいですが、リクエストが8つほど削減出来た。ペイロードサイズがネックにならないとは言い切れないけど、用法用量を守れば効果的なよう。</p>
+
+<h3 id="before">Before</h3>
+
+<p><img src="/img/posts/2014/reduce-http-requests-with-polymer-vulcanize/before.png" alt="" /></p>
+
+<h3 id="after">After</h3>
+
+<p><img src="/img/posts/2014/reduce-http-requests-with-polymer-vulcanize/after.png" alt="" /></p>
+
+<h2 id="所感">所感</h2>
+
+<p>リソースの断片化によるHTTPリクエストの増加はVulcanizeで解決出来る。でも事前にビルドするということが前提になる。
+Web Componentsの謳い文句である <strong>「再利用」</strong> を考えれば、npmやbowerのようなパッケージマネージャを使って落とすのではなく、ネットワークからダイレクトにコンポーネントをロードしたいという発想も出てくる。
+それがorigamiのようなCDNで配信側でビルドされて返却されるようになるのか、はたまたHTTP2の普及で気にしなくなる時が来るのかわからないけど、それまではVulcanize使うと良さそう。</p>
+
+        <aside class="Share">
+  <div class="Share__Item">
+     <a href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2f1000ch.net%2fposts%2f2014%2freduce-http-requests-with-polymer-vulcanize.html" title="Share on Facebook" target="_blank">
+       <i class="fa fa-facebook-square"></i>
+     </a>
+  </div>
+  <div class="Share__Item">
+    <a href="https://twitter.com/share?url=https%3a%2f%2f1000ch.net%2fposts%2f2014%2freduce-http-requests-with-polymer-vulcanize.html&text=Vulcanize%e3%81%a7%e6%b8%9b%e3%82%89%e3%81%99HTML%20Imports%e3%81%aeHTTP%e3%83%aa%e3%82%af%e3%82%a8%e3%82%b9%e3%83%88" title="Share on Twitter" target="_blank">
+      <i class="fa fa-twitter-square"></i>
+    </a>
+  </div>
+  <div class="Share__Item">
+    <a href="https://plus.google.com/share?url=https%3a%2f%2f1000ch.net%2fposts%2f2014%2freduce-http-requests-with-polymer-vulcanize.html" title="Share on Google+" target="_blank">
+      <i class="fa fa-google-plus-square"></i>
+    </a>
+  </div>
+</aside>
+
+<nav class="Pager">
+  
+    <div class="Pager__Item Pager__Item--left">
+      <i class="fa fa-arrow-left"></i>
+      <a href="/posts/2014/html5-links-rel.html">linkのrelの種類と効能等</a>
+    </div>
+  
+
+  
+    <div class="Pager__Item Pager__Item--right">
+      <a href="/posts/2014/philips-wide-display-23inch.html">PHILIPS 23型AH-IPSパネル採用ワイドディスプレイを買った</a>
+      <i class="fa fa-arrow-right"></i>
+    </div>
+  
+</nav>
+
+      </div>
+      <aside class="Aside">
+  <h1>Author</h1>
+  <div class="Media">
+    <img class="Media__Figure Media__Figure--oval" src="/img/1000ch.jpg" alt="1000ch" width="80" height="80">
+    <div class="Media__Body">
+      <h3 class="Media__Title">1000ch <a href="https://twitter.com/1000ch" class="twitter-follow-button" data-show-count="false" data-show-screen-name="false">Follow @1000ch</a></h3>
+      <div class="Media__description">
+        渋谷で働くソフトウェアエンジニア。Web Standards、パフォーマンス、アクセシビリティあたりのキーワードに反応します。
+      </div>
+    </div>
+  </div>
+</aside>
+
+      <footer class="Footer">
+  <div class="Banner">
+    <div class="Banner__Item">
+      <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.ja" target="_blank">
+        <img src="/img/by-nc-nd.png" alt="CC BY-NC-ND 4.0" width="80" height="28">
+      </a>
+    </div>
+    <div class="Banner__Item">
+      <a href="https://cloud.feedly.com/#subscription%2Ffeed%2Fhttp%3A%2F%2Fhttps%3A%2F%2F1000ch.net%2Findex.xml" target="_blank">
+        <img src="https://s3.feedly.com/img/follows/feedly-follow-rectangle-flat-medium_2x.png" alt="follow me on feedly" width="71" height="28">
+      </a>
+    </div>
+    <div class="Banner__Item">
+      <form action="https://duckduckgo.com/" role="search">
+        <input name="sites" type="hidden" value="1000ch.net">
+        <input name="q" type="search">
+        <input type="submit" value="Search">
+      </form>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <script async src="//apis.google.com/js/plusone.js"></script>
+<script async src="//platform.twitter.com/widgets.js"></script>
+<script async src="//platform.instagram.com/en_US/embeds.js"></script>
+<script async src="//assets.codepen.io/assets/embed/ei.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var blocks = document.querySelectorAll('pre code');
+  for (var i = 0, l = blocks.length; i < l; i++) {
+    hljs.highlightBlock(blocks[i]);
+  }
+});
+</script>
+
+  </body>
+</html>

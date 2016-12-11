@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>ブラウザのNotification APIをWeb Components化した - 1000ch.net</title>
+
+<link rel="icon" href="/favicon.png">
+<link rel="shortcut icon" href="/favicon.png">
+<link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml" sizes="any">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/github.min.css">
+<link rel="stylesheet" href="/css/app.min.css">
+<link rel="alternate" href="/rss.xml" title="1000ch.net" type="application/rss+xml">
+
+<meta name="author" content="Shogo Sensui">
+<meta name="copyright" content="Copyright (c) Shogo Sensui; Licensed under Creative Commons Attribution-Noncommercial-Share Japan">
+
+
+  
+    <meta property="og:description" content="ブラウザのNotification APIをWeb Components化した 巷で話題のWeb Componentsですが、コンポーネント化していくのは所謂UIパーツだけに留まりません。 XMLHttpRequest部分を抽象化しているcore-ajaxとか、core-localstorageとか。 そんなわけで試しにNotification API周りをラップしたx-notificationを作ってみた。 これを使えば、今までJavaScriptから実行していた部分を、HTML内で宣言的に記述することが可能になる。有意義かどうかは、さておき。
+ダウンロード npmかbowerでどうぞ。もちろんリポジトリをクローンでも。
+$ npm install x-notification $ bower install x-notification  使い方 使いたいページで、x-notification.htmlをインポートする。
+&lt;link rel=&#39;import&#39; href=&#39;x-notification.html&#39;&gt;  あとは&lt;x-notification&gt;タグを記述する。
+&lt;x-notification autoshow title=&#39;バルーンのタイトル&#39;&gt;バルーンの本文&lt;/x-notification&gt;  自動で表示したい場合はautoshow属性を付与することで自動で表示されて、 JavaScript側でコントロールしたい場合は対象の&lt;x-notification&gt;要素を取得し、show()を実行する。
+document.querySelector(&#39;x-notification&#39;).show();  属性等の詳細はリポジトリを参照して下さい。
+環境とか NotificationのAPIが実装されていないとダメなのはもちろんのこと、 HTMLImportやらDocument#registerElement()やら、Web Components周りのAPIが無いと動きません。 ただ、Web Components側のAPI群に関してはPolymer/platform等でPolyfillすれば動きます。
+Re-designed x-notification landing page with Polymer including Paper Elements. http://1000ch.github.io/x-notification #Polymer #WebComponents #PaperElements
+&mdash; 1000ch (@1000ch_en) 2014, 7月 2 x-notification自体はピュアなWeb Componentsだけど、デモ用にx-notification-editorというPolymerを使ったWeb Componentsを作った。 x-notification-editor内にx-notificationを内包し、PaperElementsを駆使して動的にx-notificationの属性値をいじれるようにしている。
+ http://1000ch.github.io/x-notification/ - デモページ https://github.">
+  
+
+  
+    <meta property="og:image" content="https://1000ch.net/favicon.svg">
+    <meta name="twitter:card" content="summary">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://1000ch.net/posts/2014/x-notification.html">
+<meta property="og:site_name" content="1000ch.net">
+<meta property="og:title" content="ブラウザのNotification APIをWeb Components化した">
+
+<meta name="twitter:site" content="@1000ch">
+<meta name="twitter:url" content="https://1000ch.net/posts/2014/x-notification.html">
+<meta name="twitter:title" content="ブラウザのNotification APIをWeb Components化した">
+
+<meta name="google-site-verification" content="BWewniqiBzRmrhpj51eLwug-F4hamFfyznl-ARb-Y4Y">
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/apple-touch-icon.png">
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/img/apple-touch-icon.png">
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/img/apple-touch-icon.png">
+<link rel="apple-touch-icon-precomposed" href="/img/apple-touch-icon.png">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-49530352-1', '1000ch.net');
+  ga('send', 'pageview');
+</script>
+
+  </head>
+  <body>
+    <div class="Container">
+      <header class="Header">
+  <h1 class="Header__Title"><a href="/">1000ch.net</a></h1>
+  <nav class="Header__Menu">
+    <div class="Header__MenuItem">
+      <i class="fa fa-rss"></i>
+      <a href="/rss.xml">RSS</a>
+    </div>
+    <div class="Header__MenuItem">
+      <i class="fa fa-heart"></i>
+      <a href="/activity.html">Activity</a>
+    </div>
+    <div class="Header__MenuItem">
+      <i class="fa fa-facebook-square"></i>
+      <a href="https://www.facebook.com/1000ch.net">Facebook</a>
+    </div>
+  </nav>
+</header>
+
+      <div class="Main">
+        <span class="Label Label--gray pull-left">2014.07.15</span>
+
+        
+
+<h1 id="ブラウザのnotification-apiをweb-components化した">ブラウザのNotification APIをWeb Components化した</h1>
+
+<p>巷で話題のWeb Componentsですが、コンポーネント化していくのは所謂UIパーツだけに留まりません。
+XMLHttpRequest部分を抽象化している<a href="https://github.com/Polymer/core-ajax"><code>core-ajax</code></a>とか、<a href="https://github.com/Polymer/core-localstorage"><code>core-localstorage</code></a>とか。
+そんなわけで試しにNotification API周りをラップした<code>x-notification</code>を作ってみた。
+これを使えば、今までJavaScriptから実行していた部分を、HTML内で宣言的に記述することが可能になる。有意義かどうかは、さておき。</p>
+
+<h2 id="ダウンロード">ダウンロード</h2>
+
+<p><code>npm</code>か<code>bower</code>でどうぞ。もちろんリポジトリをクローンでも。</p>
+
+<pre><code class="language-bash">$ npm install x-notification
+$ bower install x-notification
+</code></pre>
+
+<h2 id="使い方">使い方</h2>
+
+<p>使いたいページで、<code>x-notification.html</code>をインポートする。</p>
+
+<pre><code class="language-html">&lt;link rel='import' href='x-notification.html'&gt;
+</code></pre>
+
+<p>あとは<code>&lt;x-notification&gt;</code>タグを記述する。</p>
+
+<pre><code class="language-html">&lt;x-notification autoshow title='バルーンのタイトル'&gt;バルーンの本文&lt;/x-notification&gt;
+</code></pre>
+
+<p>自動で表示したい場合は<code>autoshow</code>属性を付与することで自動で表示されて、
+JavaScript側でコントロールしたい場合は対象の<code>&lt;x-notification&gt;</code>要素を取得し、<code>show()</code>を実行する。</p>
+
+<pre><code class="language-js">document.querySelector('x-notification').show();
+</code></pre>
+
+<p>属性等の詳細は<a href="https://github.com/1000ch/x-notification">リポジトリ</a>を参照して下さい。</p>
+
+<h2 id="環境とか">環境とか</h2>
+
+<p>NotificationのAPIが実装されていないとダメなのはもちろんのこと、
+HTMLImportやら<code>Document#registerElement()</code>やら、Web Components周りのAPIが無いと動きません。
+ただ、Web Components側のAPI群に関しては<a href="https://github.com/Polymer/platform">Polymer/platform</a>等でPolyfillすれば動きます。</p>
+
+<blockquote class="twitter-tweet" lang="ja"><p>Re-designed x-notification landing page with Polymer including Paper Elements. <a href="http://1000ch.github.io/x-notification">http://1000ch.github.io/x-notification</a> <a href="https://twitter.com/hashtag/Polymer?src=hash">#Polymer</a> <a href="https://twitter.com/hashtag/WebComponents?src=hash">#WebComponents</a> <a href="https://twitter.com/hashtag/PaperElements?src=hash">#PaperElements</a></p>&mdash; 1000ch (@1000ch_en) <a href="https://twitter.com/1000ch_en/statuses/484296238892720128">2014, 7月 2</a></blockquote>
+
+<p><code>x-notification</code>自体はピュアなWeb Componentsだけど、デモ用に<code>x-notification-editor</code>というPolymerを使ったWeb Componentsを作った。
+<code>x-notification-editor</code>内に<code>x-notification</code>を内包し、PaperElementsを駆使して動的に<code>x-notification</code>の属性値をいじれるようにしている。</p>
+
+<ul>
+<li><a href="http://1000ch.github.io/x-notification/">http://1000ch.github.io/x-notification/</a> - デモページ</li>
+<li><a href="https://github.com/1000ch/x-notification/blob/master/x-notification-editor.html">https://github.com/1000ch/x-notification/blob/master/x-notification-editor.html</a> - x-notification-editor要素</li>
+</ul>
+
+<p><strong>Customize Example</strong> の所にソースコードを表示するようにしてあって、
+そこはPolymerが提供している2-way bindingをたっぷり使っている。これは便利だと思った。</p>
+
+<h2 id="customelements-io-http-customelements-io"><a href="http://customelements.io/">CustomElements.io</a></h2>
+
+<blockquote class="twitter-tweet" lang="ja"><p>You can find x-notification on <a href="http://t.co/PbWp0Gxp0a">http://t.co/PbWp0Gxp0a</a> <a href="https://twitter.com/hashtag/WebComponents?src=hash">#WebComponents</a> <a href="https://twitter.com/hashtag/Notification?src=hash">#Notification</a> <a href="https://twitter.com/hashtag/CustomElements?src=hash">#CustomElements</a></p>&mdash; 1000ch (@1000ch_en) <a href="https://twitter.com/1000ch_en/statuses/485281852144381954">2014, 7月 5</a></blockquote>
+
+<p>CustomElements.ioはBowerで登録されているWeb Componentsのギャラリーサイト。
+サイトの上部にあたかも登録フォームがあるのでここから申請するのかと思ったら、
+<code>bower.json</code>の<code>keywords</code>に <strong>web-components</strong> が含まれていると自動で追加されるそう。</p>
+
+<ul>
+<li><a href="https://github.com/webcomponents/customelements.io/issues/237">https://github.com/webcomponents/customelements.io/issues/237</a></li>
+</ul>
+
+<h2 id="参考資料">参考資料</h2>
+
+<ul>
+<li><a href="http://www.w3.org/TR/notifications/">Web Notifications</a></li>
+<li><a href="https://developer.mozilla.org/ja/docs/Web/API/notification">Notification - Web API Interfaces | MDN</a></li>
+<li><a href="http://www.html5rocks.com/en/tutorials/notifications/quick/">Using the Notifications API</a></li>
+</ul>
+
+        <aside class="Share">
+  <div class="Share__Item">
+     <a href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2f1000ch.net%2fposts%2f2014%2fx-notification.html" title="Share on Facebook" target="_blank">
+       <i class="fa fa-facebook-square"></i>
+     </a>
+  </div>
+  <div class="Share__Item">
+    <a href="https://twitter.com/share?url=https%3a%2f%2f1000ch.net%2fposts%2f2014%2fx-notification.html&text=%e3%83%96%e3%83%a9%e3%82%a6%e3%82%b6%e3%81%aeNotification%20API%e3%82%92Web%20Components%e5%8c%96%e3%81%97%e3%81%9f" title="Share on Twitter" target="_blank">
+      <i class="fa fa-twitter-square"></i>
+    </a>
+  </div>
+  <div class="Share__Item">
+    <a href="https://plus.google.com/share?url=https%3a%2f%2f1000ch.net%2fposts%2f2014%2fx-notification.html" title="Share on Google+" target="_blank">
+      <i class="fa fa-google-plus-square"></i>
+    </a>
+  </div>
+</aside>
+
+<nav class="Pager">
+  
+    <div class="Pager__Item Pager__Item--left">
+      <i class="fa fa-arrow-left"></i>
+      <a href="/posts/2014/google-io-2014.html">Google I/O 2014</a>
+    </div>
+  
+
+  
+    <div class="Pager__Item Pager__Item--right">
+      <a href="/posts/2014/html5-and-other-vol49.html">HTML5とか勉強会でWeb ComponentsとPolymerについて話してきた</a>
+      <i class="fa fa-arrow-right"></i>
+    </div>
+  
+</nav>
+
+      </div>
+      <aside class="Aside">
+  <h1>Author</h1>
+  <div class="Media">
+    <img class="Media__Figure Media__Figure--oval" src="/img/1000ch.jpg" alt="1000ch" width="80" height="80">
+    <div class="Media__Body">
+      <h3 class="Media__Title">1000ch <a href="https://twitter.com/1000ch" class="twitter-follow-button" data-show-count="false" data-show-screen-name="false">Follow @1000ch</a></h3>
+      <div class="Media__description">
+        渋谷で働くソフトウェアエンジニア。Web Standards、パフォーマンス、アクセシビリティあたりのキーワードに反応します。
+      </div>
+    </div>
+  </div>
+</aside>
+
+      <footer class="Footer">
+  <div class="Banner">
+    <div class="Banner__Item">
+      <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.ja" target="_blank">
+        <img src="/img/by-nc-nd.png" alt="CC BY-NC-ND 4.0" width="80" height="28">
+      </a>
+    </div>
+    <div class="Banner__Item">
+      <a href="https://cloud.feedly.com/#subscription%2Ffeed%2Fhttp%3A%2F%2Fhttps%3A%2F%2F1000ch.net%2Findex.xml" target="_blank">
+        <img src="https://s3.feedly.com/img/follows/feedly-follow-rectangle-flat-medium_2x.png" alt="follow me on feedly" width="71" height="28">
+      </a>
+    </div>
+    <div class="Banner__Item">
+      <form action="https://duckduckgo.com/" role="search">
+        <input name="sites" type="hidden" value="1000ch.net">
+        <input name="q" type="search">
+        <input type="submit" value="Search">
+      </form>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <script async src="//apis.google.com/js/plusone.js"></script>
+<script async src="//platform.twitter.com/widgets.js"></script>
+<script async src="//platform.instagram.com/en_US/embeds.js"></script>
+<script async src="//assets.codepen.io/assets/embed/ei.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var blocks = document.querySelectorAll('pre code');
+  for (var i = 0, l = blocks.length; i < l; i++) {
+    hljs.highlightBlock(blocks[i]);
+  }
+});
+</script>
+
+  </body>
+</html>

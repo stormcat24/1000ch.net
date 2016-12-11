@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Custom Elements v1 - 1000ch.net</title>
+
+<link rel="icon" href="/favicon.png">
+<link rel="shortcut icon" href="/favicon.png">
+<link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml" sizes="any">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/github.min.css">
+<link rel="stylesheet" href="/css/app.min.css">
+<link rel="alternate" href="/rss.xml" title="1000ch.net" type="application/rss+xml">
+
+<meta name="author" content="Shogo Sensui">
+<meta name="copyright" content="Copyright (c) Shogo Sensui; Licensed under Creative Commons Attribution-Noncommercial-Share Japan">
+
+
+  
+    <meta property="og:description" content="Custom Elements v1 Custom Elements v1 が Chrome の 54 からサポートされた。
+これまでの document.registerElement(&#39;custom-element&#39;) によるカスタム要素の定義は v0 にあたり、 v1 は様々な見直しがなされた Custom Elements の新しいバージョンである。
+定義方法の変更 v0 document にぶら下がる registerElement() で要素を定義してきた。 registerElement() は定義されたカスタム要素のコンストラクタを返す。
+// カスタム要素の定義 const FooElement = document.registerElement(&#39;foo-element&#39;, { prototype: FooElementPrototype }); // &lt;button is=&quot;bar-button&quot;&gt;&lt;/button&gt; const BarButton = document.registerElement(&#39;bar-button&#39;, { prototype: FooElementPrototype, extends: &#39;button&#39; });  v1 window に customElements というオブジェクトが追加される。 customElements は CustomElementRegistory という IDL である。
+カスタム要素に関する操作はこの customElements を通して行われ、customElements.define(&#39;element-name&#39;) でカスタム要素を定義し、 customElements.get(&#39;element-name&#39;) でカスタム要素を参照し、 customElements.">
+  
+
+  
+    <meta property="og:image" content="https://1000ch.net/favicon.svg">
+    <meta name="twitter:card" content="summary">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://1000ch.net/posts/2016/custom-elements-v1.html">
+<meta property="og:site_name" content="1000ch.net">
+<meta property="og:title" content="Custom Elements v1">
+
+<meta name="twitter:site" content="@1000ch">
+<meta name="twitter:url" content="https://1000ch.net/posts/2016/custom-elements-v1.html">
+<meta name="twitter:title" content="Custom Elements v1">
+
+<meta name="google-site-verification" content="BWewniqiBzRmrhpj51eLwug-F4hamFfyznl-ARb-Y4Y">
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/apple-touch-icon.png">
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/img/apple-touch-icon.png">
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/img/apple-touch-icon.png">
+<link rel="apple-touch-icon-precomposed" href="/img/apple-touch-icon.png">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-49530352-1', '1000ch.net');
+  ga('send', 'pageview');
+</script>
+
+  </head>
+  <body>
+    <div class="Container">
+      <header class="Header">
+  <h1 class="Header__Title"><a href="/">1000ch.net</a></h1>
+  <nav class="Header__Menu">
+    <div class="Header__MenuItem">
+      <i class="fa fa-rss"></i>
+      <a href="/rss.xml">RSS</a>
+    </div>
+    <div class="Header__MenuItem">
+      <i class="fa fa-heart"></i>
+      <a href="/activity.html">Activity</a>
+    </div>
+    <div class="Header__MenuItem">
+      <i class="fa fa-facebook-square"></i>
+      <a href="https://www.facebook.com/1000ch.net">Facebook</a>
+    </div>
+  </nav>
+</header>
+
+      <div class="Main">
+        <span class="Label Label--gray pull-left">2016.09.16</span>
+
+        
+
+<h1 id="custom-elements-v1">Custom Elements v1</h1>
+
+<p>Custom Elements v1 が <a href="https://www.chromestatus.com/features/4696261944934400">Chrome の 54 からサポートされた</a>。</p>
+
+<p>これまでの <code>document.registerElement('custom-element')</code> によるカスタム要素の定義は v0 にあたり、 v1 は様々な見直しがなされた Custom Elements の新しいバージョンである。</p>
+
+<h2 id="定義方法の変更">定義方法の変更</h2>
+
+<h3 id="v0">v0</h3>
+
+<p><code>document</code> にぶら下がる <code>registerElement()</code> で要素を定義してきた。 <code>registerElement()</code> は定義されたカスタム要素のコンストラクタを返す。</p>
+
+<pre><code class="language-javascript">// カスタム要素の定義
+const FooElement = document.registerElement('foo-element', {
+  prototype: FooElementPrototype
+});
+
+// &lt;button is=&quot;bar-button&quot;&gt;&lt;/button&gt;
+const BarButton = document.registerElement('bar-button', {
+  prototype: FooElementPrototype,
+  extends: 'button'
+});
+</code></pre>
+
+<h3 id="v1">v1</h3>
+
+<p><code>window</code> に <code>customElements</code> というオブジェクトが追加される。 <code>customElements</code> は <a href="https://www.w3.org/TR/custom-elements/#dom-customelementregistry"><code>CustomElementRegistory</code></a> という IDL である。</p>
+
+<p>カスタム要素に関する操作はこの <code>customElements</code> を通して行われ、<code>customElements.define('element-name')</code> でカスタム要素を定義し、 <code>customElements.get('element-name')</code> でカスタム要素を参照し、 <code>customElements.whenDefined('element-name')</code> でカスタム要素が定義されるタイミングを取得する。 <code>whenDefined()</code> の返り値は <code>Promise</code> である。</p>
+
+<pre><code class="language-javascript">// カスタム要素の定義
+customElements.define('foo-element', FooElement);
+
+// &lt;button is=&quot;bar-button&quot;&gt;&lt;/button&gt;
+customElements.define('bar-button', BarButton, {
+  extends: 'button'
+});
+
+// コンストラクタの参照
+const FooElement = customElements.get('foo-element');
+
+// 要素が定義されたタイミングの取得
+customElements.whenDefined('baz-element')
+  .then(() =&gt; console.log('baz-element is defined'));
+</code></pre>
+
+<p><code>&lt;button is=&quot;app-button&quot;&gt;&lt;/button&gt;</code> のように、ネイティブのHTML要素の拡張として機能させることも、従来のように可能。 <code>customElements.define()</code> の第三引数に <code>{ extends: 'button' }</code> のようなオプションを渡す。</p>
+
+<p>カスタム要素の名前にはハイフンを含む必要があるとか、同じ名前のカスタム要素を再定義はできないといった基本的なルールは v0 から変化なし。</p>
+
+<h2 id="ライフサイクルの変更">ライフサイクルの変更</h2>
+
+<h3 id="v0-1">v0</h3>
+
+<ol>
+<li><code>createdCallback()</code>: 要素が生成された時</li>
+<li><code>attachedCallback()</code>: 要素がHTMLに追加された時</li>
+<li><code>detachedCallback()</code>: HTMLから要素が除かれた時</li>
+<li><code>attributeChangedCallback()</code>: 要素の属性が変更された時</li>
+</ol>
+
+<h3 id="v1-1">v1</h3>
+
+<ol>
+<li><code>constructor()</code>: 要素が生成または更新された時</li>
+<li><code>connectedCallback()</code>: 要素がHTMLに追加された時</li>
+<li><code>disconnectedCallback()</code>: HTMLから要素が除かれた時</li>
+<li><code>attributeChangedCallback()</code>: 要素の属性が変更された時</li>
+<li><code>adoptedCallback()</code>: 要素が新たなドキュメントに移動した時</li>
+</ol>
+
+<p><code>adoptedCallback()</code> は <strong>要素が新たなドキュメントに移動した時</strong> とあるが、 <code>document.adoptNode()</code> などを通して元のツリーから削除し、実行者の <code>document</code> に追加されたタイミングで、つまり <code>ownerDocument</code> が変更されたタイミングと言い換えられる。</p>
+
+<h2 id="class-ベースの要素定義">class ベースの要素定義</h2>
+
+<p>v0 から <a href="/posts/2016/web-components-es2015-class.html">ES2015 の <code>class</code> で定義可能だった</a>が、 先のように <code>constructor</code> がライフサイクルに含むこともあり、改めて次のようになる。</p>
+
+<pre><code class="language-javascript">customElements.define('header-tab', class HeaderTab extends HTMLElement {
+  static get observedAttributes() {
+    return ['selected'];
+  }
+
+  get selected() {
+    return this.hasAttribute('selected');
+  }
+
+  set selected(value) {
+    if (value) {
+      this.setAttribute('selected', value);
+    } else {
+      this.removeAttribute('selected');
+    }
+  }
+
+  constructor() {
+    // HTMLElement の constructor を呼び出す
+    super();
+  }
+
+  connectedCallback() { ... }
+
+  disconnectedCallback() { ... }
+
+  attributeChangedCallback(name, oldValue, newValue) { ... }
+
+  adoptedCallback() { ... }
+});
+</code></pre>
+
+<p>ライフサイクルの他に追加されているのがクラスプロパティとして定義している <code>observedAttributes</code> だが、ここで指定された属性のみが値変更の監視対象となる。そのため、ここで指定していない属性が変更されても <code>attributeChangedCallback()</code> には通知されない。</p>
+
+<h2 id="lazyload-image-に見るワークアラウンド">lazyload-image に見るワークアラウンド</h2>
+
+<p>画像をスクロール同期でロードさせる <a href="https://github.com/1000ch/lazyload-image">1000ch/lazyload-image</a> を Custom Elements v1 で再実装したのが <a href="https://github.com/1000ch/lazyload-image/pull/9/files?diff=split">efine with customElements.define() #9</a> だが、想定通り動かない（ <code>HTMLImageElement</code> を <code>Image</code> に変えてもダメだった）。</p>
+
+<h2 id="参考">参考</h2>
+
+<ul>
+<li><a href="https://html.spec.whatwg.org/multipage/scripting.html#custom-elements">4.13 Custom elements - HTML Standard</a></li>
+<li><a href="https://developers.google.com/web/fundamentals/primers/customelements/">Custom elements v1: reusable web components | Web Fundamentals - Google Developers</a></li>
+</ul>
+
+        <aside class="Share">
+  <div class="Share__Item">
+     <a href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2f1000ch.net%2fposts%2f2016%2fcustom-elements-v1.html" title="Share on Facebook" target="_blank">
+       <i class="fa fa-facebook-square"></i>
+     </a>
+  </div>
+  <div class="Share__Item">
+    <a href="https://twitter.com/share?url=https%3a%2f%2f1000ch.net%2fposts%2f2016%2fcustom-elements-v1.html&text=Custom%20Elements%20v1" title="Share on Twitter" target="_blank">
+      <i class="fa fa-twitter-square"></i>
+    </a>
+  </div>
+  <div class="Share__Item">
+    <a href="https://plus.google.com/share?url=https%3a%2f%2f1000ch.net%2fposts%2f2016%2fcustom-elements-v1.html" title="Share on Google+" target="_blank">
+      <i class="fa fa-google-plus-square"></i>
+    </a>
+  </div>
+</aside>
+
+<nav class="Pager">
+  
+    <div class="Pager__Item Pager__Item--left">
+      <i class="fa fa-arrow-left"></i>
+      <a href="/posts/2016/soft-skills.html">SOFT SKILLS　ソフトウェア開発者の人生マニュアル</a>
+    </div>
+  
+
+  
+    <div class="Pager__Item Pager__Item--right">
+      <a href="/posts/2016/github-japan.html">GitHub Japanを訪問してきた</a>
+      <i class="fa fa-arrow-right"></i>
+    </div>
+  
+</nav>
+
+      </div>
+      <aside class="Aside">
+  <h1>Author</h1>
+  <div class="Media">
+    <img class="Media__Figure Media__Figure--oval" src="/img/1000ch.jpg" alt="1000ch" width="80" height="80">
+    <div class="Media__Body">
+      <h3 class="Media__Title">1000ch <a href="https://twitter.com/1000ch" class="twitter-follow-button" data-show-count="false" data-show-screen-name="false">Follow @1000ch</a></h3>
+      <div class="Media__description">
+        渋谷で働くソフトウェアエンジニア。Web Standards、パフォーマンス、アクセシビリティあたりのキーワードに反応します。
+      </div>
+    </div>
+  </div>
+</aside>
+
+      <footer class="Footer">
+  <div class="Banner">
+    <div class="Banner__Item">
+      <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.ja" target="_blank">
+        <img src="/img/by-nc-nd.png" alt="CC BY-NC-ND 4.0" width="80" height="28">
+      </a>
+    </div>
+    <div class="Banner__Item">
+      <a href="https://cloud.feedly.com/#subscription%2Ffeed%2Fhttp%3A%2F%2Fhttps%3A%2F%2F1000ch.net%2Findex.xml" target="_blank">
+        <img src="https://s3.feedly.com/img/follows/feedly-follow-rectangle-flat-medium_2x.png" alt="follow me on feedly" width="71" height="28">
+      </a>
+    </div>
+    <div class="Banner__Item">
+      <form action="https://duckduckgo.com/" role="search">
+        <input name="sites" type="hidden" value="1000ch.net">
+        <input name="q" type="search">
+        <input type="submit" value="Search">
+      </form>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <script async src="//apis.google.com/js/plusone.js"></script>
+<script async src="//platform.twitter.com/widgets.js"></script>
+<script async src="//platform.instagram.com/en_US/embeds.js"></script>
+<script async src="//assets.codepen.io/assets/embed/ei.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var blocks = document.querySelectorAll('pre code');
+  for (var i = 0, l = blocks.length; i < l; i++) {
+    hljs.highlightBlock(blocks[i]);
+  }
+});
+</script>
+
+  </body>
+</html>

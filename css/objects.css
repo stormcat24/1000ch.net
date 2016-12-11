@@ -1,0 +1,31 @@
+/**
+ * Objects...............Cosmetic-free design patterns.
+ */
+
+.Label {
+  font-size: 1.2rem;
+  margin: 0.4rem;
+  padding: 0.4rem;
+  vertical-align: text-bottom;
+  border-radius: 0.4rem;
+}
+
+.Label--gray {
+  color: #666;
+  background: #eee;
+}
+
+.Label--red {
+  color: #fff;
+  background: #e2007a;
+}
+
+.Label--blue {
+  color: #fff;
+  background: #199ad5;
+}
+
+.Label--yellow {
+  color: #2e2e2c;
+  background: #f3df49;
+}

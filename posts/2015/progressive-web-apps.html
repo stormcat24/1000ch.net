@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Progressive Web Appsとは - 1000ch.net</title>
+
+<link rel="icon" href="/favicon.png">
+<link rel="shortcut icon" href="/favicon.png">
+<link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml" sizes="any">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/github.min.css">
+<link rel="stylesheet" href="/css/app.min.css">
+<link rel="alternate" href="/rss.xml" title="1000ch.net" type="application/rss+xml">
+
+<meta name="author" content="Shogo Sensui">
+<meta name="copyright" content="Copyright (c) Shogo Sensui; Licensed under Creative Commons Attribution-Noncommercial-Share Japan">
+
+
+  
+    <meta property="og:description" content="Progressive Web Appsとは 今年のChrome Dev SummitでもセッションにあったProgressive Web Appsについて。Progressive Web Apps自体は特定の技術を指す言葉ではなく、 Webの進化していくべき姿 を提唱しているものだ。Alex Russell氏が自身のブログで綴ったのが事の始まりで、Chrome Dev Summitでも初日はProgressive Web Appsをテーマにセッションが組まれたそう。
+ Webアプリとネイティブアプリ パソコンでWebを閲覧する分にはパフォーマンスがネックになることは少なくなってきている。パソコンのスペックはネットワークインフラに比べて進化が順調だし、ネットワークも光回線のように十分に速度が得られる環境でインターネットをすることがほとんどだろう。
+しかしモバイルデバイスではどうだろうか。iPhoneやAndroid端末のスペックも良くなってきているとはいえ、Mac Book Proとは比較にならないし、ネットワークも不安定であることが多い。4Gの提供エリアであっても建物の中にいたり、地下鉄に乗っていれば十分に利用できない（それでも着実に整備が進んでいると思うが）。
+詰まるところ、潤沢な閲覧環境にならないことが多い。HTML・CSS・JavaScript・画像・動画といったようなリソースをネットワークを介して適時取得する必要があるWebにとっては、サービスの価値が左右されてしまう。原因がネットワークでもそうでないとしても、ユーザーはスムースに閲覧できることをいつも期待しているからだ。
+比べてネイティブアプリは、リソースの大半がアプリにバンドルされており、起動後はネットワークからリソースを読み出す回数がWebに比べて少ない。オフライン時にもキャッシュデータをロードするなど、オフラインになったことを意識させない設計になっていることが多く、少なくともWebのように画面が真っ白になってしまうことがない。動作もOSネイティブに比べてブラウザエンジンはどうしてもパフォーマンスがでない。
+加えて、Webのアプリではサービスの要件を機能面で満たせないことが多かった。カメラ、ジャイロスコープ、最近だとiOSの3D Touchなど。プッシュ通知もその中のひとつである。
+A year ago, I asked what features made you turn to native. #1 response: push notifications. Today, they&#39;re available: http://t.co/wDOKa5qVbf
+&mdash; Paul Irish (@paul_irish) 2015, 3月 12 こうした状況を背景に、サービスのモバイルアプリにはiOSやAndroidのネイティブがプラットフォームとして選択されてきた。Mark Zuckerberg氏が（Facebookが？）HTML5に水を差したのも少なからず原因の1つだと思うが。
+プラットフォームとしてのWebの進化 ネイティブにはないWebのメリットもたくさんある。ストアから探してインストールせずとも使えるし、見つけ出したらURLで簡単にシェアできる。また、Google PlayやApp Storeといったベンダープラットフォームに縛られないというメリットもある。これは見方によっては、エコシステムの恩恵を享受できない（アプリのカテゴライズ・配布されるアプリの品質担保・ストアからのプロモートなど）とも捉えられるが、大半はWebでも補うことができるだろう。
+Webがプラットフォームとしてネイティブアプリ同等の機能を提供できれば良いということは、Webのエヴァンジェリスト達が唱え続けてきたことだ。パフォーマンスとしてRAILが唱えられたり、Service WorkerもWebを前に進めるために生まれた。これらで実現されることをワーディングしたのがProgressive Web Appsである（と、理解している）。マーケティングのためのプロモート色が強いが、流行も技術推進のために必要なことだろう。
+Progressive Web Appsを表す特徴 では具体的にどういったことを提供すればいいかという話になるが、Alex Russell氏は先に紹介したブログの記事で以下のように挙げている。しかし、これらを全て満たす必要があるとかではなく、Webとしてより良い特徴が羅列されているとも捉えられる。">
+  
+
+  
+    <meta property="og:image" content="https://1000ch.net/favicon.svg">
+    <meta name="twitter:card" content="summary">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://1000ch.net/posts/2015/progressive-web-apps.html">
+<meta property="og:site_name" content="1000ch.net">
+<meta property="og:title" content="Progressive Web Appsとは">
+
+<meta name="twitter:site" content="@1000ch">
+<meta name="twitter:url" content="https://1000ch.net/posts/2015/progressive-web-apps.html">
+<meta name="twitter:title" content="Progressive Web Appsとは">
+
+<meta name="google-site-verification" content="BWewniqiBzRmrhpj51eLwug-F4hamFfyznl-ARb-Y4Y">
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/apple-touch-icon.png">
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/img/apple-touch-icon.png">
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/img/apple-touch-icon.png">
+<link rel="apple-touch-icon-precomposed" href="/img/apple-touch-icon.png">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-49530352-1', '1000ch.net');
+  ga('send', 'pageview');
+</script>
+
+  </head>
+  <body>
+    <div class="Container">
+      <header class="Header">
+  <h1 class="Header__Title"><a href="/">1000ch.net</a></h1>
+  <nav class="Header__Menu">
+    <div class="Header__MenuItem">
+      <i class="fa fa-rss"></i>
+      <a href="/rss.xml">RSS</a>
+    </div>
+    <div class="Header__MenuItem">
+      <i class="fa fa-heart"></i>
+      <a href="/activity.html">Activity</a>
+    </div>
+    <div class="Header__MenuItem">
+      <i class="fa fa-facebook-square"></i>
+      <a href="https://www.facebook.com/1000ch.net">Facebook</a>
+    </div>
+  </nav>
+</header>
+
+      <div class="Main">
+        <span class="Label Label--gray pull-left">2015.12.24</span>
+
+        
+
+<h1 id="progressive-web-appsとは">Progressive Web Appsとは</h1>
+
+<p>今年のChrome Dev Summitでもセッションにあった<a href="https://www.youtube.com/watch?v=MyQ8mtR9WxI">Progressive Web Apps</a>について。Progressive Web Apps自体は特定の技術を指す言葉ではなく、 <strong>Webの進化していくべき姿</strong> を提唱しているものだ。Alex Russell氏が<a href="https://infrequently.org/2015/06/progressive-apps-escaping-tabs-without-losing-our-soul/">自身のブログで綴った</a>のが事の始まりで、Chrome Dev Summitでも初日はProgressive Web Appsをテーマにセッションが組まれたそう。</p>
+
+<iframe width="100%" height="320" src="https://www.youtube.com/embed/MyQ8mtR9WxI" frameborder="0" allowfullscreen></iframe>
+
+<h2 id="webアプリとネイティブアプリ">Webアプリとネイティブアプリ</h2>
+
+<p>パソコンでWebを閲覧する分にはパフォーマンスがネックになることは少なくなってきている。パソコンのスペックはネットワークインフラに比べて進化が順調だし、ネットワークも光回線のように十分に速度が得られる環境でインターネットをすることがほとんどだろう。</p>
+
+<p>しかしモバイルデバイスではどうだろうか。iPhoneやAndroid端末のスペックも良くなってきているとはいえ、Mac Book Proとは比較にならないし、ネットワークも不安定であることが多い。4Gの提供エリアであっても建物の中にいたり、地下鉄に乗っていれば十分に利用できない（それでも着実に整備が進んでいると思うが）。</p>
+
+<p>詰まるところ、潤沢な閲覧環境にならないことが多い。HTML・CSS・JavaScript・画像・動画といったようなリソースをネットワークを介して適時取得する必要があるWebにとっては、サービスの価値が左右されてしまう。原因がネットワークでもそうでないとしても、ユーザーはスムースに閲覧できることをいつも期待しているからだ。</p>
+
+<p>比べてネイティブアプリは、リソースの大半がアプリにバンドルされており、起動後はネットワークからリソースを読み出す回数がWebに比べて少ない。オフライン時にもキャッシュデータをロードするなど、オフラインになったことを意識させない設計になっていることが多く、少なくともWebのように画面が真っ白になってしまうことがない。動作もOSネイティブに比べてブラウザエンジンはどうしてもパフォーマンスがでない。</p>
+
+<p>加えて、Webのアプリではサービスの要件を機能面で満たせないことが多かった。カメラ、ジャイロスコープ、最近だとiOSの3D Touchなど。プッシュ通知もその中のひとつである。</p>
+
+<blockquote class="twitter-tweet" lang="ja"><p lang="en" dir="ltr">A year ago, I asked what features made you turn to native. #1 response: push notifications. Today, they&#39;re available: <a href="http://t.co/wDOKa5qVbf">http://t.co/wDOKa5qVbf</a></p>&mdash; Paul Irish (@paul_irish) <a href="https://twitter.com/paul_irish/status/576089864514326528">2015, 3月 12</a></blockquote>
+
+<p>こうした状況を背景に、サービスのモバイルアプリにはiOSやAndroidのネイティブがプラットフォームとして選択されてきた。Mark Zuckerberg氏が（Facebookが？）HTML5に水を差したのも少なからず原因の1つだと思うが。</p>
+
+<h2 id="プラットフォームとしてのwebの進化">プラットフォームとしてのWebの進化</h2>
+
+<p>ネイティブにはないWebのメリットもたくさんある。ストアから探してインストールせずとも使えるし、見つけ出したらURLで簡単にシェアできる。また、Google PlayやApp Storeといったベンダープラットフォームに縛られないというメリットもある。これは見方によっては、エコシステムの恩恵を享受できない（アプリのカテゴライズ・配布されるアプリの品質担保・ストアからのプロモートなど）とも捉えられるが、大半はWebでも補うことができるだろう。</p>
+
+<p>Webがプラットフォームとしてネイティブアプリ同等の機能を提供できれば良いということは、Webのエヴァンジェリスト達が唱え続けてきたことだ。パフォーマンスとして<a href="https://havelog.ayumusato.com/develop/performance/e664-rail_performance_model.html">RAIL</a>が唱えられたり、<a href="https://1000ch.net/posts/2014/service-worker-internals.html">Service Worker</a>もWebを前に進めるために生まれた。これらで実現されることをワーディングしたのがProgressive Web Appsである（と、理解している）。マーケティングのためのプロモート色が強いが、流行も技術推進のために必要なことだろう。</p>
+
+<h2 id="progressive-web-appsを表す特徴">Progressive Web Appsを表す特徴</h2>
+
+<p>では具体的にどういったことを提供すればいいかという話になるが、Alex Russell氏は先に紹介したブログの記事で以下のように挙げている。しかし、これらを全て満たす必要があるとかではなく、Webとしてより良い特徴が羅列されているとも捉えられる。</p>
+
+<ul>
+<li><strong>レスポンシブである</strong>: どんな閲覧環境にも最適化されたレイアウトで表示されること</li>
+<li><strong>オンラインでもオフラインでも動作する</strong>: オフライン時でもオンライン時に近い振る舞いをすること。<a href="https://1000ch.net/posts/2015/service-worker-passive-cache.html">Service Workerによる通信のハンドルとCache APIによるリソースの制御</a>でオフライン化を実現できる</li>
+<li><strong>ネイティブアプリのようなインタラクション</strong></li>
+<li><strong>最新に更新されている</strong>: Service WorkerのBackground Sync等で、常に最新が提供できること</li>
+<li><strong>安全である</strong>: 傍受されないよう暗号化され、セキュアであること。Service WorkerもHTTPS環境下のみ配信可能である</li>
+<li><strong>発見・特定できる</strong>: <a href="https://w3c.github.io/manifest/">Web App Manifest</a>によってアプリケーションとして確認されること</li>
+<li><strong>エンゲージの機会を提供できる</strong>: プッシュ通知などを通じてアプリを使ってもらう機会を促すことができること。<a href="https://1000ch.net/posts/2015/service-worker-push-notification.html">Webのプッシュ通知はService Workerで実現される</a></li>
+<li><strong>ネイティブアプリのようにインストールできる</strong>: ホームスクリーンに追加され、ユーザーに使ってもらう機会があること。アプリのアイコンを予め用意しておくのはもちろんのこと、<a href="https://w3c.github.io/manifest/">Web App Manifest</a>というマニフェストファイルをアプリに定義しておくことで、<a href="https://developers.google.com/web/updates/2015/03/increasing-engagement-with-app-install-banners-in-chrome-for-android">ブラウザがインストールを促すダイアログを表示</a>できる</li>
+<li><strong>URLでリンクできる</strong>: インストールが要らず、URLでアクセスできるというWebの基本であり根幹</li>
+</ul>
+
+<p>これらをすべて満たすことがProgressive Web Appsの条件というわけではなく、雑に言えばこういうWebだと良いよねという話である。ひと昔前なら <strong>Webでは無理だけどネイティブならできること</strong> でもあったので、これからのWebで出来ることの再認識をも唱えている。</p>
+
+<h2 id="service-workerとhttps">Service WorkerとHTTPS</h2>
+
+<p>事実上、Service WorkerとHTTPSは必須である。Service WorkerはHTTPSが前提なのでまずHTTPSということになるが、HTTPS化の敷居が証明書の管理や取得のコストと手間のせいでどうしても高い（個人だと特に）。しかしHTTPS化の波は確実に来ており、様々な所で暗黙の前提になりつつあるので導入を避け続けることができない。無料で証明書を取得できる<a href="https://letsencrypt.org">Let’s Encrypt</a>のようなサービスもあるので、練習がてら積極的に利用していくべきだろう。</p>
+
+<p>また、自身のWebをHTTPS化しても、サードパーティのHTTPのコンテンツが混在すると表示できないという問題が出てくる。そのサービスにとってクリティカルなコンテンツだとどうしようもなくなる可能性があるが、これが障壁になるとWeb全体のHTTPS化が進まないというジレンマもあるので、難しいところだ。</p>
+
+<p>Progressive Web Appsで唱えられている（もといネイティブアプリの特徴であった）、オフライン化・プッシュ通知・バックグラウンド同期は全てService Worker（+Web App Manifest）によって成り立つものだ。しかしいずれの機能もサービスにとってクリティカルな損失になりにくく（要件次第、設計次第だが）、プログレッシブ・エンハンスメントとして導入しやすい。非機能要件として既存のWebにも追加しやすいので、現在関わっているWeb開発に組み込むことを検討できる。</p>
+
+<h2 id="パフォーマンス">パフォーマンス</h2>
+
+<p>イニシャライズプロセスにおけるアセットのロードについては、Service WorkerとCache APIによる明示的なキャッシュコントロールによってある程度解決されるだろう。その他のリソース取得に関しても、<a href="http://www.w3.org/TR/resource-hints/">Resource Hints</a>や<a href="http://igrigorik.github.io/http-client-hints/">Client Hints</a>などによる最適化が進んでいる。</p>
+
+<p>ランタイムプロセスにおいてWebアプリのパフォーマンスがネイティブアプリのそれを超えることは性質上無理だが、デバイスと技術の進化と共に使い心地に差を感じにくくなる時は来る。デスクトップWebが良い例で、WindowsやMacのネイティブアプリでサービスを展開するケースは少なくなってきている。というより、Webアプリで機能をカバーできるケースが増えている、という方が適切かもしれない。これは、デスクトップWebでも充分にパフォーマンスが出て、ブラウザで出来る機能も拡充されてきたことが理由にある。ElectronやNode-webkitのようにChromiumやWebKitがデスクトップアプリの新たなプラットフォームとして再利用されていることにも表れている。</p>
+
+<p>そうなれば1つのソースコードであらゆるプラットフォームに配信できるWebの方が開発時のコストも低く、よりストアに申請することなくスピーディに配信でき、サービスの提供側にも利用側にもメリットが大きい。</p>
+
+        <aside class="Share">
+  <div class="Share__Item">
+     <a href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2f1000ch.net%2fposts%2f2015%2fprogressive-web-apps.html" title="Share on Facebook" target="_blank">
+       <i class="fa fa-facebook-square"></i>
+     </a>
+  </div>
+  <div class="Share__Item">
+    <a href="https://twitter.com/share?url=https%3a%2f%2f1000ch.net%2fposts%2f2015%2fprogressive-web-apps.html&text=Progressive%20Web%20Apps%e3%81%a8%e3%81%af" title="Share on Twitter" target="_blank">
+      <i class="fa fa-twitter-square"></i>
+    </a>
+  </div>
+  <div class="Share__Item">
+    <a href="https://plus.google.com/share?url=https%3a%2f%2f1000ch.net%2fposts%2f2015%2fprogressive-web-apps.html" title="Share on Google+" target="_blank">
+      <i class="fa fa-google-plus-square"></i>
+    </a>
+  </div>
+</aside>
+
+<nav class="Pager">
+  
+    <div class="Pager__Item Pager__Item--left">
+      <i class="fa fa-arrow-left"></i>
+      <a href="/posts/2015/wdpress-frontend-series-svg.html">WEB&#43;DB PRESS Vol.90 Webフロントエンド最前線「SVG … マルチデバイスに強く、アニメーションもできる画像フォーマット」</a>
+    </div>
+  
+
+  
+    <div class="Pager__Item Pager__Item--right">
+      <a href="/posts/2015/bought-items.html">2015年に買って良かったと思ったもの</a>
+      <i class="fa fa-arrow-right"></i>
+    </div>
+  
+</nav>
+
+      </div>
+      <aside class="Aside">
+  <h1>Author</h1>
+  <div class="Media">
+    <img class="Media__Figure Media__Figure--oval" src="/img/1000ch.jpg" alt="1000ch" width="80" height="80">
+    <div class="Media__Body">
+      <h3 class="Media__Title">1000ch <a href="https://twitter.com/1000ch" class="twitter-follow-button" data-show-count="false" data-show-screen-name="false">Follow @1000ch</a></h3>
+      <div class="Media__description">
+        渋谷で働くソフトウェアエンジニア。Web Standards、パフォーマンス、アクセシビリティあたりのキーワードに反応します。
+      </div>
+    </div>
+  </div>
+</aside>
+
+      <footer class="Footer">
+  <div class="Banner">
+    <div class="Banner__Item">
+      <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.ja" target="_blank">
+        <img src="/img/by-nc-nd.png" alt="CC BY-NC-ND 4.0" width="80" height="28">
+      </a>
+    </div>
+    <div class="Banner__Item">
+      <a href="https://cloud.feedly.com/#subscription%2Ffeed%2Fhttp%3A%2F%2Fhttps%3A%2F%2F1000ch.net%2Findex.xml" target="_blank">
+        <img src="https://s3.feedly.com/img/follows/feedly-follow-rectangle-flat-medium_2x.png" alt="follow me on feedly" width="71" height="28">
+      </a>
+    </div>
+    <div class="Banner__Item">
+      <form action="https://duckduckgo.com/" role="search">
+        <input name="sites" type="hidden" value="1000ch.net">
+        <input name="q" type="search">
+        <input type="submit" value="Search">
+      </form>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <script async src="//apis.google.com/js/plusone.js"></script>
+<script async src="//platform.twitter.com/widgets.js"></script>
+<script async src="//platform.instagram.com/en_US/embeds.js"></script>
+<script async src="//assets.codepen.io/assets/embed/ei.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var blocks = document.querySelectorAll('pre code');
+  for (var i = 0, l = blocks.length; i < l; i++) {
+    hljs.highlightBlock(blocks[i]);
+  }
+});
+</script>
+
+  </body>
+</html>

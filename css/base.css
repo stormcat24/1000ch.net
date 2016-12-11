@@ -1,0 +1,188 @@
+/**
+ * Base..................Unclassed HTML elements [type selectors].
+ */
+
+html {
+  font-size: 62.5%;
+  box-sizing: border-box;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+body {
+  font-family: YuMincho, serif;
+  font-feature-settings: "palt";
+  font-size: 1.6em;
+  font-weight: normal;
+  line-height: 1.6;
+  color: #666;
+  background: #f9f9f9;
+}
+
+::selection {
+  color: #fff;
+  background: #e2007a;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  font-weight: bold;
+}
+
+h1,
+h2,
+h3 {
+  margin: 4.8rem 0 2.4rem;
+  color: #333;
+}
+
+h1 {
+  font-size: 3.2rem;
+}
+
+h2 {
+  font-size: 2.4rem;
+}
+
+h3 {
+  font-size: 2rem;
+}
+
+ul,
+ol {
+  padding-left: 3.2rem;
+}
+
+li {
+  padding: 0.4rem 0;
+}
+
+img {
+  max-width: 100%;
+}
+
+table {
+  margin: 0 auto;
+  border-collapse: collapse;
+  overflow: auto;
+}
+
+th {
+  background-color: #f8f8f8;
+}
+
+td,
+th {
+  padding: 0.8rem;
+  border: 0.1rem solid #ddd;
+}
+
+kbd {
+  font-size: 1.2rem;
+  line-height: 1.2rem;
+  display: inline-block;
+  padding: 0.2rem 0.4rem;
+  user-select: none;
+  vertical-align: text-bottom;
+  border: solid 0.1rem #ccc;
+  border-bottom-color: #bbb;
+  border-radius: 0.4rem;
+  background-color: #fcfcfc;
+  box-shadow: inset 0 -0.1rem 0 #bbb;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-touch-callout: none;
+}
+
+kbd:active {
+  position: relative;
+  top: 0.1rem;
+  box-shadow: inset 0 0 0 #bbb;
+}
+
+pre {
+  word-wrap: normal;
+  overflow-wrap: normal;
+}
+
+code {
+  font-family: "Roboto Mono", "Source Code Pro", "Consolas", "Courier New", monospace;
+  font-size: 1.4rem;
+  margin: 0.1rem 0.2rem;
+  padding: 0.1rem 0.2rem;
+  color: #333 !important;
+  border: 0.1rem solid #ddd;
+  border-radius: 0.4rem;
+  background: #f8f8f8 !important;
+}
+
+pre > code {
+  display: block;
+  overflow-x: scroll;
+  margin: 0.8rem 0;
+  padding: 0.8rem;
+}
+
+h1 > code {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+h2 > code {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+h3 > code {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+blockquote {
+  font-size: 2rem;
+  font-style: italic;
+  margin: 3.2rem 1.6rem;
+  padding-left: 1.6rem;
+  border-left: 0.4rem solid #666;
+}
+
+hr {
+  height: 0.4rem;
+  margin: 3.2rem 1.6rem;
+  padding: 0;
+  border: 0 none;
+  background-color: #e7e7e7;
+}
+
+a {
+  text-decoration: none;
+  color: #199ad5;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-touch-callout: none;
+}
+
+a:hover,
+a:active {
+  color: #e2007a;
+}
+
+a code {
+  color: #199ad5 !important;
+}
+
+a:hover code,
+a:active code {
+  color: #e2007a !important;
+}
+
+input {
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  outline: none;
+  background-color: #fafafa;
+}

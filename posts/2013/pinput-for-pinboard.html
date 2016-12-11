@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Pinput ~PinboardユーザーのためのChrome Extension~ - 1000ch.net</title>
+
+<link rel="icon" href="/favicon.png">
+<link rel="shortcut icon" href="/favicon.png">
+<link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml" sizes="any">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/github.min.css">
+<link rel="stylesheet" href="/css/app.min.css">
+<link rel="alternate" href="/rss.xml" title="1000ch.net" type="application/rss+xml">
+
+<meta name="author" content="Shogo Sensui">
+<meta name="copyright" content="Copyright (c) Shogo Sensui; Licensed under Creative Commons Attribution-Noncommercial-Share Japan">
+
+
+  
+    <meta property="og:description" content="Pinput ~PinboardユーザーのためのChrome Extension~  Pinboard - 雑音の少ないブックマークサイト Pinput - Chromeストア 1000ch/Pinput -リポジトリ  なんか、周りのPinboardユーザーに使ってもらったら思った以上に好評だった。@t32k氏と『既存だといいのがないですね』という話をしていたら、いつの間にかプロトタイプが出来てた。
+最初は他のExtensionみたいにiframeでやっていたんだけど、やっぱiframeだと重いうえに、iframe内のイベントを拾えないのでポップアップウィンドウを閉じれない。使い心地で1番ネックだったのはここなので、PinboardのAPIを使って1から画面を作った。ら、結果的にかなり軽快に動作した。
+Simple is BEST! Bookmarkするだけの、単純なものです。削除くらいはあってもいいかなと思ったりもするが、様子で。
+iframeをなくしたのでPinboardに対する認証が必要になる。HTTP AuthとAPI tokenがありますが、このExtensionではAPI tokenを入力してもらうことで実現している。アイコンを右クリックか、拡張機能ページからオプションページを開くことが出来るので、そこから設定してください。PinboardのAPIトークンは、特別な設定もなく、Setting &gt; Passwordから入手可能。
+タイプしてる最中のサジェスト iframe実装をやめたことによる唯一の弊害がこれ。公式のPinboard - Save a Bookmarkだと tags の場所には文字列のサジェストが出る。どうしようと思った矢先に頭をよぎったのがtypeahead.js。これがまーよく出来てる。
+ちょうどjQueryも使ってることだし、やってみたらかなり簡単に使えた。サジェストするキーワードは、そのユーザーが使っているタグをローカルにキャッシュしたけど、リモートにクエリ投げて動的に取得することも出来るっぽい。">
+  
+
+  
+    <meta property="og:image" content="https://1000ch.net/favicon.svg">
+    <meta name="twitter:card" content="summary">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://1000ch.net/posts/2013/pinput-for-pinboard.html">
+<meta property="og:site_name" content="1000ch.net">
+<meta property="og:title" content="Pinput ~PinboardユーザーのためのChrome Extension~">
+
+<meta name="twitter:site" content="@1000ch">
+<meta name="twitter:url" content="https://1000ch.net/posts/2013/pinput-for-pinboard.html">
+<meta name="twitter:title" content="Pinput ~PinboardユーザーのためのChrome Extension~">
+
+<meta name="google-site-verification" content="BWewniqiBzRmrhpj51eLwug-F4hamFfyznl-ARb-Y4Y">
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/apple-touch-icon.png">
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/img/apple-touch-icon.png">
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/img/apple-touch-icon.png">
+<link rel="apple-touch-icon-precomposed" href="/img/apple-touch-icon.png">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-49530352-1', '1000ch.net');
+  ga('send', 'pageview');
+</script>
+
+  </head>
+  <body>
+    <div class="Container">
+      <header class="Header">
+  <h1 class="Header__Title"><a href="/">1000ch.net</a></h1>
+  <nav class="Header__Menu">
+    <div class="Header__MenuItem">
+      <i class="fa fa-rss"></i>
+      <a href="/rss.xml">RSS</a>
+    </div>
+    <div class="Header__MenuItem">
+      <i class="fa fa-heart"></i>
+      <a href="/activity.html">Activity</a>
+    </div>
+    <div class="Header__MenuItem">
+      <i class="fa fa-facebook-square"></i>
+      <a href="https://www.facebook.com/1000ch.net">Facebook</a>
+    </div>
+  </nav>
+</header>
+
+      <div class="Main">
+        <span class="Label Label--gray pull-left">2013.11.13</span>
+
+        
+
+<h1 id="pinput-pinboardユーザーのためのchrome-extension">Pinput ~PinboardユーザーのためのChrome Extension~</h1>
+
+<ul>
+<li><a href="http://pinboard.in/">Pinboard</a> - 雑音の少ないブックマークサイト</li>
+<li><a href="https://chrome.google.com/webstore/detail/pinput/mbpijfbpahfjnlibcnikfkekdieojkcf">Pinput</a> - Chromeストア</li>
+<li><a href="https://github.com/1000ch/Pinput">1000ch/Pinput</a> -リポジトリ</li>
+</ul>
+
+<p>なんか、周りのPinboardユーザーに使ってもらったら思った以上に好評だった。<a href="http://twitter.com/t32k">@t32k</a>氏と『既存だといいのがないですね』という話をしていたら、いつの間にかプロトタイプが出来てた。</p>
+
+<p>最初は他のExtensionみたいに<code>iframe</code>でやっていたんだけど、やっぱ<code>iframe</code>だと重いうえに、iframe内のイベントを拾えないのでポップアップウィンドウを閉じれない。使い心地で1番ネックだったのはここなので、<a href="http://pinboard.in/api">PinboardのAPI</a>を使って1から画面を作った。ら、結果的にかなり軽快に動作した。</p>
+
+<h2 id="simple-is-best">Simple is BEST!</h2>
+
+<p>Bookmarkするだけの、単純なものです。削除くらいはあってもいいかなと思ったりもするが、様子で。</p>
+
+<p><img src="https://raw.github.com/1000ch/Pinput/master/screenshot/pinput.png" alt="" /></p>
+
+<p><code>iframe</code>をなくしたのでPinboardに対する認証が必要になる。HTTP AuthとAPI tokenがありますが、このExtensionではAPI tokenを入力してもらうことで実現している。アイコンを右クリックか、拡張機能ページからオプションページを開くことが出来るので、そこから設定してください。PinboardのAPIトークンは、特別な設定もなく、<a href="https://pinboard.in/settings/password">Setting &gt; Password</a>から入手可能。</p>
+
+<p><img src="https://raw.github.com/1000ch/Pinput/master/screenshot/settings.png" alt="" /></p>
+
+<h2 id="タイプしてる最中のサジェスト">タイプしてる最中のサジェスト</h2>
+
+<p><code>iframe</code>実装をやめたことによる唯一の弊害がこれ。公式の<a href="https://pinboard.in/add">Pinboard - Save a Bookmark</a>だと <strong>tags</strong> の場所には文字列のサジェストが出る。どうしようと思った矢先に頭をよぎったのが<a href="http://twitter.github.io/typeahead.js/">typeahead.js</a>。これがまーよく出来てる。</p>
+
+<p>ちょうどjQueryも使ってることだし、やってみたらかなり簡単に使えた。サジェストするキーワードは、そのユーザーが使っているタグをローカルにキャッシュしたけど、リモートにクエリ投げて動的に取得することも出来るっぽい。</p>
+
+        <aside class="Share">
+  <div class="Share__Item">
+     <a href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2f1000ch.net%2fposts%2f2013%2fpinput-for-pinboard.html" title="Share on Facebook" target="_blank">
+       <i class="fa fa-facebook-square"></i>
+     </a>
+  </div>
+  <div class="Share__Item">
+    <a href="https://twitter.com/share?url=https%3a%2f%2f1000ch.net%2fposts%2f2013%2fpinput-for-pinboard.html&text=Pinput%20~Pinboard%e3%83%a6%e3%83%bc%e3%82%b6%e3%83%bc%e3%81%ae%e3%81%9f%e3%82%81%e3%81%aeChrome%20Extension~" title="Share on Twitter" target="_blank">
+      <i class="fa fa-twitter-square"></i>
+    </a>
+  </div>
+  <div class="Share__Item">
+    <a href="https://plus.google.com/share?url=https%3a%2f%2f1000ch.net%2fposts%2f2013%2fpinput-for-pinboard.html" title="Share on Google+" target="_blank">
+      <i class="fa fa-google-plus-square"></i>
+    </a>
+  </div>
+</aside>
+
+<nav class="Pager">
+  
+    <div class="Pager__Item Pager__Item--left">
+      <i class="fa fa-arrow-left"></i>
+      <a href="/posts/2013/frontrend-in-sapporo.html">SaCSS Special4 Frontrend in Sapporoに出演します</a>
+    </div>
+  
+
+  
+    <div class="Pager__Item Pager__Item--right">
+      <a href="/posts/2013/try-raspberry-pi.html">Raspberry PiにChromiumとかJenkinsを入れてみた</a>
+      <i class="fa fa-arrow-right"></i>
+    </div>
+  
+</nav>
+
+      </div>
+      <aside class="Aside">
+  <h1>Author</h1>
+  <div class="Media">
+    <img class="Media__Figure Media__Figure--oval" src="/img/1000ch.jpg" alt="1000ch" width="80" height="80">
+    <div class="Media__Body">
+      <h3 class="Media__Title">1000ch <a href="https://twitter.com/1000ch" class="twitter-follow-button" data-show-count="false" data-show-screen-name="false">Follow @1000ch</a></h3>
+      <div class="Media__description">
+        渋谷で働くソフトウェアエンジニア。Web Standards、パフォーマンス、アクセシビリティあたりのキーワードに反応します。
+      </div>
+    </div>
+  </div>
+</aside>
+
+      <footer class="Footer">
+  <div class="Banner">
+    <div class="Banner__Item">
+      <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.ja" target="_blank">
+        <img src="/img/by-nc-nd.png" alt="CC BY-NC-ND 4.0" width="80" height="28">
+      </a>
+    </div>
+    <div class="Banner__Item">
+      <a href="https://cloud.feedly.com/#subscription%2Ffeed%2Fhttp%3A%2F%2Fhttps%3A%2F%2F1000ch.net%2Findex.xml" target="_blank">
+        <img src="https://s3.feedly.com/img/follows/feedly-follow-rectangle-flat-medium_2x.png" alt="follow me on feedly" width="71" height="28">
+      </a>
+    </div>
+    <div class="Banner__Item">
+      <form action="https://duckduckgo.com/" role="search">
+        <input name="sites" type="hidden" value="1000ch.net">
+        <input name="q" type="search">
+        <input type="submit" value="Search">
+      </form>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <script async src="//apis.google.com/js/plusone.js"></script>
+<script async src="//platform.twitter.com/widgets.js"></script>
+<script async src="//platform.instagram.com/en_US/embeds.js"></script>
+<script async src="//assets.codepen.io/assets/embed/ei.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var blocks = document.querySelectorAll('pre code');
+  for (var i = 0, l = blocks.length; i < l; i++) {
+    hljs.highlightBlock(blocks[i]);
+  }
+});
+</script>
+
+  </body>
+</html>
